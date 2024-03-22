@@ -48,17 +48,18 @@ export const configHeatMap =  {
                         radius: 46.4
                     }
                 },
-                visualChannels:{weigthField: null,weightScale: 'linear'}
+                visualChannels:{weightfield: null, weightScale: 'linear'}
 
             }
 
             ],
-            interactionConfig:{
+            interactionConfig: {
                 tooltip:{
-                    fieldsToShow:{dumy:[]},
-                    compareMode:false,
-                    compareType: 'absolute',
-                    enabled:true
+                    fieldsToShow: {tree_data:[]},
+                        compareMode: false,
+                        compareType: 'absolute',
+                        enabled:true
+
                 }
             }
 

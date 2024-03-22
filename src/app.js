@@ -7,7 +7,8 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import styled from 'styled-components';
 import KeplerGl from '@kepler.gl/components';
 import Map from '../src/Map/Map'
-
+import HeatMap from "./Map/HeatMap";
+import {Route} from "wouter";
 
  // eslint-disable-line
 
@@ -21,7 +22,8 @@ const StyledWrapper = styled.div`
 
 const App = () => (
   <StyledWrapper>
-    <Map/>
+    <Route path="/point" component={Map}/>
+    <Route path="/heat" component ={HeatMap}/>
   </StyledWrapper>
 );
 
