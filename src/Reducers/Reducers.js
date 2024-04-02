@@ -1,7 +1,34 @@
-import keplerGlReducer from "@kepler.gl/reducers";
-import {combineReducers} from "redux";
-import KeplerGl from "@kepler.gl/components";
+import {createAction, handleAction, handleActions} from "redux-actions";
+import KeplerGlSchema from "@kepler.gl/schemas";
 
-export default reducers === combineReducers({
-    KeplerGl:keplerGlReducer
-})
+//Const
+export const INIT  = 'INIT';
+export const SET_MAP_CONFIG = 'SET_MAP_CONFIG';
+
+//ACTIONS
+export const appInit = createAction(INIT);
+export const setMapConfig = createAction(SET_MAP_CONFIG);
+
+//init state
+
+const initialState = {
+    appName:'example',
+    loaded: false
+};
+
+//reducer
+
+const appReducer = handleActions({
+    [INIT]: (state, action) => ({
+        ...state,
+        loaded:true
+    }),
+    [SET_MAP_CONFIG]:(state,action) => ({
+        ...state,
+        mapConfig: KeplerGlSchema.getConfigToSave(action.payload)
+    })
+},
+    initialState
+);
+
+export default appReducer;

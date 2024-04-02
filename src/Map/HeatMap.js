@@ -1,65 +1,99 @@
-import React from "react";
-import {useDispatch} from "react-redux";
-
-import {addDataToMap} from "@kepler.gl/actions";
-import useSwr from "swr"
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {addDataToMap,wrapTo} from "@kepler.gl/actions";
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
-import {configHeatMap} from "../ConfigMaps/ConfigMaps";
-const MAPBOX_TOKEN = "pk.eyJ1Ijoicm9ydCIsImEiOiJjbHM0MmI5NDEwNHBxMnBucno4b2N3NjVxIn0.SERm613fkXbX-sjncK3g8A";
 import {
-    CustomPanelsFactory,injectComponents
+    SidebarFactory,
+    PanelHeaderFactory,
+    PanelToggleFactory,
+    CustomPanelsFactory,
+    MapPopoverFactory,
+    injectComponents
 } from "@kepler.gl/components";
+
+import CustomPanelHeaderFactory from "../Components/panel-header";
+import CustomSidebarFactory from "../Components/side-bar";
+import CustomPanelToggleFactory from "../Components/panel-toggle";
 import CustomSidePanelFactory from "../Components/custom-panel";
+import CustomMapPopoverFactory from "../Components/custom-map-popover";
+
 import styled from "styled-components";
+import {theme} from "@kepler.gl/styles";
+import {da,config,Data} from "../Data/Data"
+import { processGeojson} from "@kepler.gl/processors";
 
 
-const KeplerGl = injectComponents(
-    [CustomPanelsFactory,CustomSidePanelFactory]
+const MAPBOX_TOKEN = "pk.eyJ1Ijoicm9ydCIsImEiOiJjbHViYzc3MzQwdnh3MmttenRic3BmODkzIn0.sdbKEKJX6T-7CgwDQEQJSg";
+
+const KeplerGl = injectComponents([
+    [SidebarFactory,CustomSidebarFactory],
+    [PanelHeaderFactory,CustomPanelHeaderFactory],
+    [PanelToggleFactory,CustomPanelToggleFactory],
+    [CustomPanelsFactory,CustomSidePanelFactory],
+    [MapPopoverFactory,CustomMapPopoverFactory]
+    ]
+
 )
 
+const StyledMapConfigDisplay = styled.div`
+  position: absolute;
+  z-index: 100;
+  bottom: 10px;
+  right: 10px;
+  background-color: ${theme.sidePanelBg};
+  font-size: 11px;
+  width: 300px;
+  color: ${theme.textColor};
+  word-wrap: break-word;
+  min-height: 60px;
+  padding: 10px;
+`;
 
 
+console.log(Data)
 
+class App extends Component {
 
-export default function HeatMap(){
+    componentDidMount() {
+        this.props.dispatch(wrapTo("map1",addDataToMap({
+         datasets:[
+             {
+                 info: {label: 'SF Zip Geo'},
+                 data:processGeojson(da)
+             },
+             {
+                 info: {
+                     label: 'San Francisco Trees',
+                     id: 'tree_data'
+                 },
+                 data:Data.data
+             }
+         ], config
+        }) ))
+    }
 
-    const dispatch = useDispatch();
-    const {data} = useSwr("dumy",async () => {
-        const response  = await fetch (  "https://gist.githubusercontent.com/leighhalliday/a994915d8050e90d413515e97babd3b3/raw/a3eaaadcc784168e3845a98931780bd60afb362f/covid19.json");
-        const data = await response.json();
-        return data;
+    render () {
+        return (
+            <div style={{position: 'absolute', width: '100%', height: '100%'}}>
+                <AutoSizer>
+                    {({height, width}) => (
+                        <KeplerGl  mapboxApiAccessToken={MAPBOX_TOKEN} id="map1" width={width} height={height}/>
+                    )}
+                </AutoSizer>
+                <StyledMapConfigDisplay>
+                    {this.props.app.mapConfig
+                        ? JSON.stringify(this.props.app.mapConfig)
+                        : 'click Save config To Display Config here'}
+                </StyledMapConfigDisplay>
 
-    });
-
-    React.useEffect(()=>{
-        if(data){
-            dispatch(addDataToMap({datasets:{
-                    info:{
-                        label:"dumy",
-                        id: "test_trip_data"
-                    },
-                    data
-                },options:{
-                    centerMap:true,
-                    readOnly:false,
-                }, config: configHeatMap
-
-            }))
-        }
-        
-    }, [dispatch,data]);
-
-
-
-    return (
-        <div>
-            <AutoSizer>
-                {({height, width}) => (
-                    <KeplerGl id = "Default" mapboxApiAccessToke = {MAPBOX_TOKEN} width={width} height={height}/>
-                )}
-            </AutoSizer>
-
-        </div>
-
-    )
+            </div>
+        );
+    }
 }
+
+
+const mapStateToProPS = state => state;
+const dispatchToProps = dispatch => ({dispatch});
+
+export default connect(mapStateToProPS, dispatchToProps)(App);
+

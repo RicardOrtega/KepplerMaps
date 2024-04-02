@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright contributors to the kepler.gl project
-
+/*
 import {createAction, handleActions} from 'redux-actions';
 import KeplerGlSchema from '@kepler.gl/schemas'
 // CONSTANTS
@@ -31,4 +31,4 @@ const appReducer = handleActions(
   initialState
 );
 
-export default appReducer;
+*/

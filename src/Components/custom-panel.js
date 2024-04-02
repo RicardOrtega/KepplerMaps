@@ -2,7 +2,7 @@ import React from 'react';
 import {Icons} from "@kepler.gl/components";
 
 function CustomSidePanelFactory(){
-    const CustomPanel  = props =>{
+    const CustomPanels  = props =>{
          if (props.activeSidePanel === 'rocket'){
              return <div className="rocket-panel">Rocket</div>
          }else if (props.activeSidePanel=== 'chart'){
@@ -12,22 +12,25 @@ function CustomSidePanelFactory(){
     };
 
 
-    CustomPanel.defaultProps = {
-        panels: [ {
+    CustomPanels.defaultProps = {
+        panels: [
+            {
             id: 'rocket',
-            label: 'rocket',
+            label: 'Rocket',
             iconComponent: Icons.Rocket
         },
-            {id: 'chart',
-            label:'chart',
-            iconComponent:Icons.LineChart}
+            {
+                id: 'chart',
+            label:'Chart',
+            iconComponent:Icons.LineChart
+            }
 
         ],
         getProps: props  => ({
             layers: props.layers
         })
     };
-    return CustomPanel;
+    return CustomPanels;
 }
 
 export default CustomSidePanelFactory;

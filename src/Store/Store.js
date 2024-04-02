@@ -1,7 +1,20 @@
-import {createStore,combineReducers,applyMiddleware} from "redux";
-import reducers from "../Reducers/Reducers"
-import {taskMiddleware} from "react-palm/tasks";
-import store from "@kepler.gl/components"
+import {createStore,combineReducers,applyMiddleware,compose} from "redux";
+import keplerGlReducer,{enhanceReduxMiddleware} from "@kepler.gl/reducers";
+import appReducer from "../Reducers/Reducers";
 
+const customizedKeplerGLReducer = keplerGlReducer.initialState({
+    uiState:{
+        activeSidePanel:null,
+        currentModal: null
+    }
+});
 
-export default store = createStore(reducers,{},applyMiddleware(taskMiddleware))
+const reducers = combineReducers({
+    keplerGl:customizedKeplerGLReducer,
+    app:appReducer
+});
+
+const middlewares = enhanceReduxMiddleware([]);
+const enhancers = [applyMiddleware(...middlewares)];
+
+export default createStore(reducers,{},compose(...enhancers));

@@ -1,21 +1,10 @@
 import React from 'react';
-import {applyMiddleware, combineReducers, createStore} from "redux";
+
 import {Provider} from "react-redux"
 import ReactDOM from 'react-dom/client';
 
 import App from './app';
-
-import keplerGlReducer from "@kepler.gl/reducers";
-import {taskMiddleware} from "react-palm/tasks";
-
-
-const reducer = combineReducers({
-    keplerGl: keplerGlReducer,
-
-});
-
- const store = createStore(reducer,{},applyMiddleware(taskMiddleware));
-
+import store from "../src/Store/Store"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
