@@ -11,7 +11,7 @@ const config = require('./webpack.config.js')(webpackENV);
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const ADDRESS = '0.0.0.0';
-const DEV_PORT = 3000;
+const DEV_PORT = 8021;
 const port = isDeveloping ? DEV_PORT : process.env.PORT;
 
 const app = express();
