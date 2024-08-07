@@ -19,7 +19,7 @@ import CustomMapPopoverFactory from "../Components/custom-map-popover";
 
 import styled from "styled-components";
 import {theme} from "@kepler.gl/styles";
-import {da,config,Data} from "../Data/Data"
+import {da,config,bip} from "../Data/Data"
 import { processGeojson} from "@kepler.gl/processors";
 
 
@@ -49,9 +49,6 @@ const StyledMapConfigDisplay = styled.div`
   padding: 10px;
 `;
 
-
-console.log(Data)
-
 class App extends Component {
 
     componentDidMount() {
@@ -63,10 +60,10 @@ class App extends Component {
              },
              {
                  info: {
-                     label: 'San Francisco Trees',
-                     id: 'tree_data'
+                     label: 'Puntos bip',
+                     id: 'PuntosBip'
                  },
-                 data:Data.data
+                 data:bip.data
              }
          ], config
         }) ))

@@ -12,7 +12,7 @@ const webpack = require('webpack');
 const CONFIG = {
   // bundle app.js and everything it imports, recursively.
   entry: {
-    app: resolve('./src/main.js')
+    app: resolve('./src/app.js')
   },
   output: {
     path: resolve(__dirname, 'build'),

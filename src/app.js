@@ -21,10 +21,7 @@ const StyledWrapper = styled.div`
 
 
 const App = () => (
-  <StyledWrapper>
-    <Route path="/point" component={Map}/>
-    <Route path="/heat" component ={HeatMap}/>
-  </StyledWrapper>
+  <HeatMap/>
 );
 
 const mapStateToProps = state => state;
