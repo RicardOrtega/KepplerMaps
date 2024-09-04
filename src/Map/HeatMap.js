@@ -19,7 +19,7 @@ import CustomMapPopoverFactory from "../Components/custom-map-popover";
 
 import styled from "styled-components";
 import {theme} from "@kepler.gl/styles";
-import {config, bip, geoJson} from "../Data/Data"
+import {config, geoJson} from "../Data/Data"
 import {processGeojson} from "@kepler.gl/processors";
 
 
@@ -62,7 +62,7 @@ class App extends Component {
                         label: 'Puntos bip',
                         id: 'PuntosBip'
                     },
-                    data: bip.data
+                    data: "bip.data"
                 }
             ], config
         })))
