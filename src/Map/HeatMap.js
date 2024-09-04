@@ -19,8 +19,15 @@ import CustomMapPopoverFactory from "../Components/custom-map-popover";
 
 import styled from "styled-components";
 import {theme} from "@kepler.gl/styles";
-import {config, geoJson} from "../Data/Data"
-import {processGeojson} from "@kepler.gl/processors";
+import {
+    config,
+    geoJson,
+    solicitudes_Cerrada,
+    solicitudes_Derivadas, solicitudes_Finalizada,
+    solicitudes_Inicida,
+    solicitudes_Proceso
+} from "../Data/Data"
+import {processGeojson, processKeplerglDataset, Processors} from "@kepler.gl/processors";
 
 
 const MAPBOX_TOKEN = "pk.eyJ1Ijoicm9ydCIsImEiOiJjbHViYzc3MzQwdnh3MmttenRic3BmODkzIn0.sdbKEKJX6T-7CgwDQEQJSg";
@@ -50,25 +57,48 @@ const StyledMapConfigDisplay = styled.div`
 
 class App extends Component {
 
+
+
     componentDidMount() {
+
         this.props.dispatch(wrapTo("map1", addDataToMap({
             datasets: [
                 {
-                    info: {label: 'GeoJsonData'},
-                    data: processGeojson(geoJson)
+                    info: {label: 'Solicitudes Iniciadas',
+                        id:"SolIniciada"
+                    },
+                    data: solicitudes_Inicida
                 },
                 {
-                    info: {
-                        label: 'Puntos bip',
-                        id: 'PuntosBip'
+                    info: {label: 'Solicitudes derivadas',
+                        id:"SolDerivada"
                     },
-                    data: "bip.data"
+                    data: solicitudes_Derivadas
+                },
+                {
+                    info: {label: 'Solicitudes en proceso',
+                        id:"SolProceso"
+                    },
+                    data: solicitudes_Proceso
+                },
+                {
+                    info: {label: 'Solicitudes Cerradas',
+                        id:"SolCerrada"
+                    },
+                    data: solicitudes_Cerrada
+                },
+                {
+                    info: {label: 'Solicitudes Finalizadas',
+                        id:"SolFinalizada"
+                    },
+                    data: solicitudes_Finalizada
                 }
             ], config
         })))
     }
 
     render() {
+
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%'}}>
                 <AutoSizer>

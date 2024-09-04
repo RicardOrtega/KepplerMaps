@@ -4,47 +4,6 @@ import axios from "axios";
 import {useState} from "react";
 
 
-export const config = {
-    version: 'v1', config: {
-        visState: {
-            layers: [{
-                type: 'point', id: 'point_layer', config: {
-                    dataId: 'PuntosBip',
-                    label: 'Codigo',
-                    color: [69, 138, 70],
-                    columns: {lat: 'LATITUD', lng: 'LONGITUD', altitude: null},
-                    isVisible: true,
-                    highlightColor: [255, 0, 0, 255]
-                }, visualChannels: {
-                    sizeField: {name: 'Plan', type: 'integer'}
-                }
-            }, {
-                id: 'heatmap_layer', type: 'heatmap', config: {
-                    dataId: 'PuntosBip',
-                    label: 'Codigo',
-                    columns: {lat: 'LATITUD', lng: 'LONGITUD'},
-                    isVisible: true,
-                    visConfig: {
-                        opacity: 0.8, colorRange: {
-                            name: 'Global Warming',
-                            type: 'sequential',
-                            category: 'Uber',
-                            colors: ['#5A1846', '#900C3F', '#C70039', '#E3611C', '#F1920E', '#FFC300']
-                        }, radius: 22
-                    }
-                }, visualChannels: {weightField: null, weightScale: 'linear'}
-            }], interactionConfig: {
-                tooltip: {
-                    fieldsToShow: {tree_data: []}, compareMode: false, compareType: 'absolute', enabled: true
-                }
-            }
-        }, mapState: {
-            bearing: 0, dragRotate: false, latitude: -33.47971, longitude: -70.64659, pitch: 0, zoom: 12, isSplit: false
-        }
-    }
-};
-
-
 let dataTemp = [{
     "CODIGO": 92341,
     "ENTIDAD": "fullcarga",
@@ -54,61 +13,403 @@ let dataTemp = [{
     "LONGITUD": -70.625,
     "LATITUD": -33.475,
 
-}, {
-    "CODIGO": 92342,
-    "ENTIDAD": "fullcarga",
-    "DIRECCION": "santa fe #2",
-    "COMUNA": "san miguel",
-    "HORARIO": "07:00-20:00",
-    "LONGITUD": -70.680,
-    "LATITUD": -33.515
-}, {
-    "CODIGO": 92341,
-    "ENTIDAD": "fullcarga",
-    "DIRECCION": "santa fe #1",
-    "COMUNA": "san miguel",
-    "HORARIO": "07:00-20:00",
-    "LONGITUD": -70.65876,
-    "LATITUD": -33.48794,
+},
+    {
+        "CODIGO": 92342,
+        "ENTIDAD": "fullcarga",
+        "DIRECCION": "santa fe #2",
+        "COMUNA": "san miguel",
+        "HORARIO": "07:00-20:00",
+        "LONGITUD": -70.680,
+        "LATITUD": -33.515
+    },
+    {
+        "CODIGO": 92341,
+        "ENTIDAD": "fullcarga",
+        "DIRECCION": "santa fe #1",
+        "COMUNA": "san miguel",
+        "HORARIO": "07:00-20:00",
+        "LONGITUD": -70.65876,
+        "LATITUD": -33.48794,
 
-},]
+    },]
 
 
 let Data = []
 
-let databd = await axios.get("https://cors-anywhere.herokuapp.com/http://143.198.118.203:8000/reuqest_data_map",
-    {
-    auth: {
-        username: "api_mapa@urban.cl", password: "api_mapa@urban.cl"
-    }
-}).
-then(res => {
-    Data.push(res.data)
-}).
-catch(err => {
-        console.log(err)
-    })
 
-export let Derivada = []
+let databd = await axios.get("https://cors-anywhere.herokuapp.com/http://143.198.118.203:8000/reuqest_data_map/",
+    {
+        auth: {
+            username: "api_mapa@urban.cl", password: "api_mapa@urban.cl"
+        }
+    }).then(res => {
+    Data.push(res.data)
+}).catch(err => {
+    console.log(err)
+})
+
+
+export let solicitudes_Inicida = {
+    fields: [
+        {name: 'Id'},
+        {name: 'Nombre_solicitud'},
+        {name: 'Tipo_soliciud'},
+        {name: 'Fecha_Solicitud'},
+        {name: 'Fecha_derivacion'},
+        {name: 'Fecha_Aceptacion'},
+        {name: 'Fecha_Cierre'},
+        {name: 'Fecha_Finalizacion'},
+        {name: 'latitud'},
+        {name: 'longitud'}
+    ],
+    rows: [],
+}
+export let solicitudes_Derivadas = {
+    fields: [
+        {name: 'Id'},
+        {name: 'Nombre_solicitud'},
+        {name: 'Tipo_soliciud'},
+        {name: 'Fecha_Solicitud'},
+        {name: 'Fecha_derivacion'},
+        {name: 'Fecha_Aceptacion'},
+        {name: 'Fecha_Cierre'},
+        {name: 'Fecha_Finalizacion'},
+        {name: 'latitud'},
+        {name: 'longitud'}
+    ],
+    rows: [],
+}
+export let solicitudes_Proceso = {
+    fields: [
+        {name: 'Id'},
+        {name: 'Nombre_solicitud'},
+        {name: 'Tipo_soliciud'},
+        {name: 'Fecha_Solicitud'},
+        {name: 'Fecha_derivacion'},
+        {name: 'Fecha_Aceptacion'},
+        {name: 'Fecha_Cierre'},
+        {name: 'Fecha_Finalizacion'},
+        {name: 'latitud'},
+        {name: 'longitud'}
+    ],
+    rows: [],
+}
+export let solicitudes_Cerrada = {
+    fields: [
+        {name: 'Id'},
+        {name: 'Nombre_solicitud'},
+        {name: 'Tipo_soliciud'},
+        {name: 'Fecha_Solicitud'},
+        {name: 'Fecha_derivacion'},
+        {name: 'Fecha_Aceptacion'},
+        {name: 'Fecha_Cierre'},
+        {name: 'Fecha_Finalizacion'},
+        {name: 'latitud'},
+        {name: 'longitud'}
+    ],
+    rows: [],
+}
+export let solicitudes_Finalizada = {
+    fields: [
+        {name: 'Id'},
+        {name: 'Nombre_solicitud'},
+        {name: 'Tipo_soliciud'},
+        {name: 'Fecha_Solicitud'},
+        {name: 'Fecha_derivacion'},
+        {name: 'Fecha_Aceptacion'},
+        {name: 'Fecha_Cierre'},
+        {name: 'Fecha_Finalizacion'},
+        {name: 'latitud'},
+        {name: 'longitud'}
+    ],
+    rows: [],
+}
 
 
 const innerData = Data["0"]
 
 for (const key in innerData) {
+
     const dataArray = innerData[key]["0"]
+
+
 
     if (dataArray.request_state === "Derivada") {
         const DerivadaObject = {
-            id: dataArray.request_name,
-            Fecha: dataArray.request_date
+            id: key,
+            nombre_solicitud: dataArray.request_name,
+            Tipo_soliciud: dataArray.request_type,
+            Fecha_Solicitud: dataArray.request_date,
+            Fecha_derivacion: dataArray.request_delivery,
+            Fecha_Aceptacion: dataArray.request_accept,
+            Fecha_Cierre: dataArray.request_close,
+            Fecha_Finalizacion: dataArray.request_finish,
+            Latitude: dataArray.request_lat,
+            Longitude: dataArray.request_lon
+
         };
 
-        Derivada.push(DerivadaObject)
+
+
+        const row = [
+            DerivadaObject.id,
+            DerivadaObject.nombre_solicitud,
+            DerivadaObject.Tipo_soliciud,
+            DerivadaObject.Fecha_Solicitud,
+            DerivadaObject.Fecha_derivacion,
+            DerivadaObject.Fecha_Aceptacion,
+            DerivadaObject.Fecha_Cierre,
+            DerivadaObject.Fecha_Finalizacion,
+            parseFloat(DerivadaObject.Latitude),
+            parseFloat(DerivadaObject.Longitude),
+        ]
+
+
+        solicitudes_Derivadas.rows.push(row)
+
+    }
+    if (dataArray.request_state === "Iniciada") {
+        const DerivadaObject = {
+            id: key,
+            nombre_solicitud: dataArray.request_name,
+            Tipo_soliciud: dataArray.request_type,
+            Fecha_Solicitud: dataArray.request_date,
+            Fecha_derivacion: dataArray.request_delivery,
+            Fecha_Aceptacion: dataArray.request_accept,
+            Fecha_Cierre: dataArray.request_close,
+            Fecha_Finalizacion: dataArray.request_finish,
+            Latitude: dataArray.request_lat,
+            Longitude: dataArray.request_lon
+
+        };
+
+
+
+        const row = [
+            DerivadaObject.id,
+            DerivadaObject.nombre_solicitud,
+            DerivadaObject.Tipo_soliciud,
+            DerivadaObject.Fecha_Solicitud,
+            DerivadaObject.Fecha_derivacion,
+            DerivadaObject.Fecha_Aceptacion,
+            DerivadaObject.Fecha_Cierre,
+            DerivadaObject.Fecha_Finalizacion,
+            parseFloat(DerivadaObject.Latitude),
+            parseFloat(DerivadaObject.Longitude),
+        ]
+
+
+        solicitudes_Inicida.rows.push(row)
+
+    }
+    if (dataArray.request_state === "Proceso") {
+        const DerivadaObject = {
+            id: key,
+            nombre_solicitud: dataArray.request_name,
+            Tipo_soliciud: dataArray.request_type,
+            Fecha_Solicitud: dataArray.request_date,
+            Fecha_derivacion: dataArray.request_delivery,
+            Fecha_Aceptacion: dataArray.request_accept,
+            Fecha_Cierre: dataArray.request_close,
+            Fecha_Finalizacion: dataArray.request_finish,
+            Latitude: dataArray.request_lat,
+            Longitude: dataArray.request_lon
+
+        };
+
+
+
+        const row = [
+            DerivadaObject.id,
+            DerivadaObject.nombre_solicitud,
+            DerivadaObject.Tipo_soliciud,
+            DerivadaObject.Fecha_Solicitud,
+            DerivadaObject.Fecha_derivacion,
+            DerivadaObject.Fecha_Aceptacion,
+            DerivadaObject.Fecha_Cierre,
+            DerivadaObject.Fecha_Finalizacion,
+            parseFloat(DerivadaObject.Latitude),
+            parseFloat(DerivadaObject.Longitude),
+        ]
+
+
+        solicitudes_Proceso.rows.push(row)
+        console.log(solicitudes_Proceso)
+    }
+    if (dataArray.request_state === "Cerrada") {
+        const DerivadaObject = {
+            id: key,
+            nombre_solicitud: dataArray.request_name,
+            Tipo_soliciud: dataArray.request_type,
+            Fecha_Solicitud: dataArray.request_date,
+            Fecha_derivacion: dataArray.request_delivery,
+            Fecha_Aceptacion: dataArray.request_accept,
+            Fecha_Cierre: dataArray.request_close,
+            Fecha_Finalizacion: dataArray.request_finish,
+            Latitude: dataArray.request_lat,
+            Longitude: dataArray.request_lon
+
+        };
+
+
+
+        const row = [
+            DerivadaObject.id,
+            DerivadaObject.nombre_solicitud,
+            DerivadaObject.Tipo_soliciud,
+            DerivadaObject.Fecha_Solicitud,
+            DerivadaObject.Fecha_derivacion,
+            DerivadaObject.Fecha_Aceptacion,
+            DerivadaObject.Fecha_Cierre,
+            DerivadaObject.Fecha_Finalizacion,
+            parseFloat(DerivadaObject.Latitude),
+            parseFloat(DerivadaObject.Longitude),
+        ]
+
+
+        solicitudes_Cerrada.rows.push(row)
+
+    }
+    if (dataArray.request_state === "Finalizada") {
+        const DerivadaObject = {
+            id: key,
+            nombre_solicitud: dataArray.request_name,
+            Tipo_soliciud: dataArray.request_type,
+            Fecha_Solicitud: dataArray.request_date,
+            Fecha_derivacion: dataArray.request_delivery,
+            Fecha_Aceptacion: dataArray.request_accept,
+            Fecha_Cierre: dataArray.request_close,
+            Fecha_Finalizacion: dataArray.request_finish,
+            Latitude: dataArray.request_lat,
+            Longitude: dataArray.request_lon
+
+        };
+
+
+
+        const row = [
+            DerivadaObject.id,
+            DerivadaObject.nombre_solicitud,
+            DerivadaObject.Tipo_soliciud,
+            DerivadaObject.Fecha_Solicitud,
+            DerivadaObject.Fecha_derivacion,
+            DerivadaObject.Fecha_Aceptacion,
+            DerivadaObject.Fecha_Cierre,
+            DerivadaObject.Fecha_Finalizacion,
+            parseFloat(DerivadaObject.Latitude),
+            parseFloat(DerivadaObject.Longitude),
+        ]
+
+
+        solicitudes_Finalizada.rows.push(row)
+
     }
 
 
 }
-console.log(Derivada)
+
+
+export const config = {
+    version: 'v1',
+    config: {
+        visState: {
+            layers: [
+                {
+                    type: 'point',
+                    id: 'Iniciada',
+                    config: {
+                        dataId: "SolIniciada",
+                        dataFormat:"json",
+                        label: "Iniciada",
+                        color: [137, 137, 137],
+                        columns: {lat: 'latitud', lng: 'longitud', altitude: null},
+                        isVisible: true,
+                        highlightColor: [255, 0, 0, 255]
+                    },
+                    visualChannels: {
+                        sizeField: {name: 'Plan', type: 'integer'}
+                    }
+                },
+                {
+                type: 'point',
+                id: 'Derivada',
+                config: {
+                    dataId: "SolDerivada",
+                    dataFormat:"json",
+                    label: ["Derivada"],
+                    color: [250, 227, 0],
+                    columns: {lat: 'latitud', lng: 'longitud', altitude: null},
+                    isVisible: true,
+                    highlightColor: [255, 0, 0, 255]
+                },
+                visualChannels: {
+                    sizeField: {name: 'Plan', type: 'integer'}
+                }
+            },
+                {
+                    type: 'point',
+                    id: 'Proceso',
+                    config: {
+                        dataId: "SolProceso",
+                        dataFormat:"json",
+                        label: "Proceso",
+                        color: [218, 0, 0],
+                        columns: {lat: 'latitud', lng: 'longitud', altitude: null},
+                        isVisible: true,
+                        highlightColor: [218, 0, 0]
+                    },
+                    visualChannels: {
+                        sizeField: {name: 'Plan', type: 'integer'}
+                    }
+                },
+                {
+                    type: 'point',
+                    id: 'Cerrada',
+                    config: {
+                        dataId: "SolCerrada",
+                        dataFormat:"json",
+                        label: "Cerrada",
+                        color: [44, 81, 190],
+                        columns: {lat: 'latitud', lng: 'longitud', altitude: null},
+                        isVisible: true,
+                        highlightColor: [255, 0, 0, 255]
+                    },
+                    visualChannels: {
+                        sizeField: {name: 'Plan', type: 'integer'}
+                    }
+                },
+                {
+                    type: 'point',
+                    id: 'Finalizada',
+                    config: {
+                        dataId: "SolFinalizada",
+                        dataFormat:"json",
+                        label: "Finalizada",
+                        color: [50, 138, 70],
+                        columns: {lat: 'latitud', lng: 'longitud', altitude: null},
+                        isVisible: true,
+                        highlightColor: [255, 0, 0, 255]
+                    },
+                    visualChannels: {
+                        sizeField: {name: 'Plan', type: 'integer'}
+                    }
+                },
+            ],
+
+        },
+
+        mapState: {
+            bearing: 0,
+            dragRotate: false,
+            latitude: -33.4536269,
+            longitude: -70.6129272,
+            pitch: 0,
+            zoom: 14,
+            isSplit: false
+        }
+    }
+};
 
 
 export let geoJson = {
