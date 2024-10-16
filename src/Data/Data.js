@@ -1,7 +1,7 @@
-import {processGeojson} from "@kepler.gl/processors"
+
 import axios from "axios";
 
-import {useState} from "react";
+
 
 
 let dataTemp = [{
@@ -37,11 +37,21 @@ let dataTemp = [{
 
 let Data = []
 
+const proxyUrl = 'http://143.198.118.203:8027'
+const path = '/reuqest_data_map/'
+const url = `${proxyUrl}${path}`
 
-let databd = await axios.get("https://cors-anywhere.herokuapp.com/http://143.198.118.203:8000/reuqest_data_map/",
+
+
+
+
+let databd = await axios.get(url,
+
     {
-        auth: {
-            username: "api_mapa@urban.cl", password: "api_mapa@urban.cl"
+        headers: {
+            'Authorization': `Basic ${btoa('api_mapa@urban.cl:api_mapa@urban.cl')}`
+        },params:{
+            port:":8000"
         }
     }).then(res => {
     Data.push(res.data)
@@ -132,8 +142,6 @@ const innerData = Data["0"]
 for (const key in innerData) {
 
     const dataArray = innerData[key]["0"]
-
-
 
     if (dataArray.request_state === "Derivada") {
         const DerivadaObject = {
