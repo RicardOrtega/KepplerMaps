@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
+
 import {addDataToMap, wrapTo} from "@kepler.gl/actions";
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
 import {
@@ -28,9 +29,8 @@ import {
     solicitudes_Proceso
 } from "../Data/Data"
 import {processGeojson, processKeplerglDataset, Processors} from "@kepler.gl/processors";
+import "maplibre-gl/dist/maplibre-gl.css"
 
-
-const MAPBOX_TOKEN = "pk.eyJ1Ijoicm9ydCIsImEiOiJjbHViYzc3MzQwdnh3MmttenRic3BmODkzIn0.sdbKEKJX6T-7CgwDQEQJSg";
 
 const KeplerGl = injectComponents([
         [SidebarFactory, CustomSidebarFactory],
@@ -55,8 +55,16 @@ const StyledMapConfigDisplay = styled.div`
     padding: 10px;
 `;
 
-class App extends Component {
+const localeMessages = {
+    en: {
+        mapLayers: {
+            terrain: 'Terrain'
+        }
+    }
+};
 
+
+class App extends Component {
 
 
     componentDidMount() {
@@ -64,32 +72,37 @@ class App extends Component {
         this.props.dispatch(wrapTo("map1", addDataToMap({
             datasets: [
                 {
-                    info: {label: 'Solicitudes Iniciadas',
-                        id:"SolIniciada"
+                    info: {
+                        label: 'Solicitudes Iniciadas',
+                        id: "SolIniciada"
                     },
                     data: solicitudes_Inicida
                 },
                 {
-                    info: {label: 'Solicitudes derivadas',
-                        id:"SolDerivada"
+                    info: {
+                        label: 'Solicitudes derivadas',
+                        id: "SolDerivada"
                     },
                     data: solicitudes_Derivadas
                 },
                 {
-                    info: {label: 'Solicitudes en proceso',
-                        id:"SolProceso"
+                    info: {
+                        label: 'Solicitudes en proceso',
+                        id: "SolProceso"
                     },
                     data: solicitudes_Proceso
                 },
                 {
-                    info: {label: 'Solicitudes Cerradas',
-                        id:"SolCerrada"
+                    info: {
+                        label: 'Solicitudes Cerradas',
+                        id: "SolCerrada"
                     },
                     data: solicitudes_Cerrada
                 },
                 {
-                    info: {label: 'Solicitudes Finalizadas',
-                        id:"SolFinalizada"
+                    info: {
+                        label: 'Solicitudes Finalizadas',
+                        id: "SolFinalizada"
                     },
                     data: solicitudes_Finalizada
                 }
@@ -97,20 +110,17 @@ class App extends Component {
         })))
     }
 
+
     render() {
 
         return (
             <div style={{position: 'absolute', width: '100%', height: '100%'}}>
                 <AutoSizer>
                     {({height, width}) => (
-                        <KeplerGl mapboxApiAccessToken={MAPBOX_TOKEN} id="map1" width={width} height={height}/>
+                        <KeplerGl id="map1" width={width} height={height}  localeMessages={localeMessages}/>
                     )}
                 </AutoSizer>
-                <StyledMapConfigDisplay>
-                    {this.props.app.mapConfig
-                        ? JSON.stringify(this.props.app.mapConfig)
-                        : 'click Save config To Display Config here'}
-                </StyledMapConfigDisplay>
+
 
             </div>
         );

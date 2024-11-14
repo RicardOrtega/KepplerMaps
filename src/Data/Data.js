@@ -1,7 +1,4 @@
-
 import axios from "axios";
-
-
 
 
 let dataTemp = [{
@@ -42,16 +39,13 @@ const path = '/reuqest_data_map/'
 const url = `${proxyUrl}${path}`
 
 
-
-
-
 let databd = await axios.get(url,
 
     {
         headers: {
             'Authorization': `Basic ${btoa('api_mapa@urban.cl:api_mapa@urban.cl')}`
-        },params:{
-            port:":8000"
+        }, params: {
+            port: ":8004"
         }
     }).then(res => {
     Data.push(res.data)
@@ -159,7 +153,6 @@ for (const key in innerData) {
         };
 
 
-
         const row = [
             DerivadaObject.id,
             DerivadaObject.nombre_solicitud,
@@ -191,7 +184,6 @@ for (const key in innerData) {
             Longitude: dataArray.request_lon
 
         };
-
 
 
         const row = [
@@ -227,7 +219,6 @@ for (const key in innerData) {
         };
 
 
-
         const row = [
             DerivadaObject.id,
             DerivadaObject.nombre_solicitud,
@@ -259,7 +250,6 @@ for (const key in innerData) {
             Longitude: dataArray.request_lon
 
         };
-
 
 
         const row = [
@@ -295,7 +285,6 @@ for (const key in innerData) {
         };
 
 
-
         const row = [
             DerivadaObject.id,
             DerivadaObject.nombre_solicitud,
@@ -328,7 +317,7 @@ export const config = {
                     id: 'Iniciada',
                     config: {
                         dataId: "SolIniciada",
-                        dataFormat:"json",
+                        dataFormat: "json",
                         label: "Iniciada",
                         color: [137, 137, 137],
                         columns: {lat: 'latitud', lng: 'longitud', altitude: null},
@@ -340,27 +329,27 @@ export const config = {
                     }
                 },
                 {
-                type: 'point',
-                id: 'Derivada',
-                config: {
-                    dataId: "SolDerivada",
-                    dataFormat:"json",
-                    label: ["Derivada"],
-                    color: [250, 227, 0],
-                    columns: {lat: 'latitud', lng: 'longitud', altitude: null},
-                    isVisible: true,
-                    highlightColor: [255, 0, 0, 255]
+                    type: 'point',
+                    id: 'Derivada',
+                    config: {
+                        dataId: "SolDerivada",
+                        dataFormat: "json",
+                        label: ["Derivada"],
+                        color: [250, 227, 0],
+                        columns: {lat: 'latitud', lng: 'longitud', altitude: null},
+                        isVisible: true,
+                        highlightColor: [255, 0, 0, 255]
+                    },
+                    visualChannels: {
+                        sizeField: {name: 'Plan', type: 'integer'}
+                    }
                 },
-                visualChannels: {
-                    sizeField: {name: 'Plan', type: 'integer'}
-                }
-            },
                 {
                     type: 'point',
                     id: 'Proceso',
                     config: {
                         dataId: "SolProceso",
-                        dataFormat:"json",
+                        dataFormat: "json",
                         label: "Proceso",
                         color: [218, 0, 0],
                         columns: {lat: 'latitud', lng: 'longitud', altitude: null},
@@ -376,7 +365,7 @@ export const config = {
                     id: 'Cerrada',
                     config: {
                         dataId: "SolCerrada",
-                        dataFormat:"json",
+                        dataFormat: "json",
                         label: "Cerrada",
                         color: [44, 81, 190],
                         columns: {lat: 'latitud', lng: 'longitud', altitude: null},
@@ -392,7 +381,7 @@ export const config = {
                     id: 'Finalizada',
                     config: {
                         dataId: "SolFinalizada",
-                        dataFormat:"json",
+                        dataFormat: "json",
                         label: "Finalizada",
                         color: [50, 138, 70],
                         columns: {lat: 'latitud', lng: 'longitud', altitude: null},
@@ -404,21 +393,19 @@ export const config = {
                     }
                 },
             ],
-
+            mapState: {
+                bearing: 0,
+                dragRotate: false,
+                latitude: -33.4536269,
+                longitude: -70.6129272,
+                pitch: 0,
+                zoom: 14,
+                isSplit: false
+            },
+            options: {centerMap: true, readOnly: false}
         },
-
-        mapState: {
-            bearing: 0,
-            dragRotate: false,
-            latitude: -33.4536269,
-            longitude: -70.6129272,
-            pitch: 0,
-            zoom: 14,
-            isSplit: false
-        }
     }
-};
-
+}
 
 export let geoJson = {
     type: "FeatureCollection", features: dataTemp.map(item => {
